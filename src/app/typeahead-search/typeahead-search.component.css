@@ -1,0 +1,24 @@
+.search-container {
+    max-width: 38rem;
+    margin: auto;
+    padding: 5rem;
+  }
+  
+  mat-form-field {
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+  
+  button {
+    margin-top: 1rem;
+  }
+  
+  mat-list {
+    margin-top: 1rem;
+    max-height: 18rem;
+    overflow-y: auto;
+  }
+  
+  mat-list-item {
+    cursor: pointer;
+  }

@@ -1,0 +1,32 @@
+   <div class="search-container">
+    <h1>Typeahead Search with Category</h1>
+
+    <mat-form-field appearance="fill">
+      <mat-label>Search:</mat-label>
+      <input
+        matInput
+        id="search-input"
+        [(ngModel)]="searchQuery"
+        (input)="onSearchInputChanged($event)"
+        placeholder="Type to search..."
+      />
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Select a category:</mat-label>
+        <mat-select id="category-select" [(ngModel)]="selectedCategoryId" aria-label="Category select">
+            <mat-option *ngFor="let category of categories" [value]="category.id">
+              {{ category.name }}
+            </mat-option>
+          </mat-select>
+      </mat-form-field>
+  
+    <button mat-raised-button color="primary" (click)="performSearch(searchQuery)">Search</button>
+  
+    <mat-list *ngIf="searchResults.length" aria-label="Search results">
+      <mat-list-item *ngFor="let result of searchResults" (click)="onResultClick(result)">
+        {{ result.title }}
+      </mat-list-item>
+    </mat-list>
+  </div>
+  
