@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { Category, CategoryService } from '../category.service';
+import { Component } from '@angular/core';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
-import { SearchResult, SearchService } from '../search.service';
+import { Category, SearchResult } from 'src/app/interfaces/interfaces';
+import { CategoryService } from 'src/app/services/category.service';
+import { SearchService } from 'src/app/services/search.service';
 
 @Component({
   selector: 'app-typeahead-search',
   templateUrl: './typeahead-search.component.html',
-  styleUrls: ['./typeahead-search.component.css']
+  styleUrls: ['./typeahead-search.component.css'],
 })
 export class TypeaheadSearchComponent {
   categories: Category[] = [];
@@ -17,7 +18,7 @@ export class TypeaheadSearchComponent {
 
   constructor(
     private categoryService: CategoryService,
-    private searchService: SearchService
+    private searchService: SearchService,
   ) {}
 
   ngOnInit(): void {
@@ -26,22 +27,20 @@ export class TypeaheadSearchComponent {
     const storedSearchTerm = localStorage.getItem('searchTerm');
     const storedCategoryId = localStorage.getItem('selectedCategoryId');
 
-    if(storedSearchTerm){
+    if (storedSearchTerm) {
       this.searchQuery = storedSearchTerm;
       this.searchSubject.next(this.searchQuery);
     }
 
-    if(storedCategoryId){
+    if (storedCategoryId) {
       this.selectedCategoryId = storedCategoryId;
     }
 
-
-    this.searchSubject.pipe(
-      debounceTime(1000),
-      distinctUntilChanged()
-    ).subscribe((data) => {
-      this.performSearch(data);
-    })
+    this.searchSubject
+      .pipe(debounceTime(1000), distinctUntilChanged())
+      .subscribe((data) => {
+        this.performSearch(data);
+      });
   }
 
   onResultClick(result: SearchResult): void {
@@ -56,8 +55,8 @@ export class TypeaheadSearchComponent {
         this.categories = data.trivia_categories;
         console.log(data.trivia_categories);
       },
-      error => console.error('Error:', error)
-    )
+      (error) => console.error('Error:', error),
+    );
   }
 
   onSearchInputChanged(event: Event): void {
@@ -66,26 +65,30 @@ export class TypeaheadSearchComponent {
   }
 
   performSearch(searchTerm: string): void {
-    localStorage.setItem('searchTerm', searchTerm)
-    localStorage.setItem('selectedCategoryId', this.selectedCategoryId)
+    localStorage.setItem('searchTerm', searchTerm);
+    localStorage.setItem('selectedCategoryId', this.selectedCategoryId);
 
-    const selectedCategory = this.categories.find(category => category.id.toString() === this.selectedCategoryId);
+    const selectedCategory = this.categories.find(
+      (category) => category.id.toString() === this.selectedCategoryId,
+    );
     const selectedCategoryName = selectedCategory ? selectedCategory.name : '';
 
-    this.searchService.searchArticles(searchTerm, selectedCategoryName).subscribe(
-      (data) => {
-        if(data.query.search.length === 0){
-         this.searchResults = [];
-         alert('No results found for the given search term and category.');
-        } else {
-          this.searchResults = data.query.search;
-          console.log(this.searchResults);
-        }
-      },
-      error => {
-        console.error('Error:', error)
-        alert('An error occurred while searching for articles.');
-      }
-    )
+    this.searchService
+      .searchArticles(searchTerm, selectedCategoryName)
+      .subscribe(
+        (data) => {
+          if (data.query.search.length === 0) {
+            this.searchResults = [];
+            alert('No results found for the given search term and category.');
+          } else {
+            this.searchResults = data.query.search;
+            console.log(this.searchResults);
+          }
+        },
+        (error) => {
+          console.error('Error:', error);
+          alert('An error occurred while searching for articles.');
+        },
+      );
   }
 }
