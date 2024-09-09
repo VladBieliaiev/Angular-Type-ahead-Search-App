@@ -1,27 +1,44 @@
-# TypeaheadSearchApp
+# Accessible Type-ahead Search Component with Category Filters
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.14.
+## Project Overview
 
-## Development server
+This project is an Angular application featuring an advanced type-ahead search component with category filters. The component includes various features and adheres to Web Accessibility Initiative (WAI-ARIA) standards to ensure accessibility for users relying on assistive technologies.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Features Implemented
 
-## Code scaffolding
+- **Angular Application Setup**: Created an Angular application using Angular CLI.
+- **CategoryService**: Implemented a service to fetch a list of categories from the Open Trivia API.
+- **TypeaheadSearch Component**:
+  - **Search Input**: Added an input field for users to type search queries.
+  - **Search Button**: Included a button to trigger search functionality.
+  - **Category Dropdown**: Created a dropdown to list all available categories fetched from the CategoryService.
+  - **Debounced Search**: Implemented debouncing with RxJS to limit API calls when the user types in the input field.
+  - **Search API Integration**: Integrated with the Wikipedia API to fetch search results based on the selected category and search query.
+  - **Results Dropdown**: Displayed the top 5 search results in a dropdown list below the input field.
+  - **Result Selection**: Allowed users to select a result, which populates the input field, updates the selected category, and closes the results dropdown.
+  - **LocalStorage**: Implemented functionality to save and retrieve the last search query and selected category using localStorage.
+  - **Accessibility Compliance**: Ensured the component adheres to WAI-ARIA standards for accessibility.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+## Technologies Used
 
-## Build
+- **Angular**: Frontend framework used to build the application.
+- **TypeScript**: Language used for writing Angular components and services.
+- **RxJS**: Library used for handling asynchronous operations and debouncing.
+- **Angular Material**: UI component library used for styling and enhancing the user interface.
+- **Open Trivia API**: Public API used to fetch categories.
+- **Wikipedia API**: Public API used to fetch search results.
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Getting Started
 
-## Running unit tests
+### Prerequisites
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+- [Node.js](https://nodejs.org/) (v12 or later)
+- [Angular CLI](https://angular.io/cli) (v12 or later)
 
-## Running end-to-end tests
+### Installation
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+1. **Clone the repository**:
 
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+   ```bash
+   git clone https://github.com/username/repository.git
+   cd repository
