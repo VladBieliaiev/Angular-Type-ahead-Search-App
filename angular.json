@@ -61,10 +61,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "typeahead-search-app:build:production"
+              "buildTarget": "typeahead-search-app:build:production"
             },
             "development": {
-              "browserTarget": "typeahead-search-app:build:development"
+              "buildTarget": "typeahead-search-app:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -72,7 +72,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "typeahead-search-app:build"
+            "buildTarget": "typeahead-search-app:build"
           }
         },
         "test": {
