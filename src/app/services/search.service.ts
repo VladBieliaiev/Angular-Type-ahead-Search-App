@@ -3,9 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SearchResponce } from '../interfaces/interfaces';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class SearchService {
   private searchApiUrl = 'https://en.wikipedia.org/w/api.php';
 
@@ -20,7 +18,6 @@ export class SearchService {
       format: 'json',
       origin: '*',
     };
-    console.log('params:', params);
     return this.http.get<SearchResponce>(this.searchApiUrl, { params });
   }
 }
