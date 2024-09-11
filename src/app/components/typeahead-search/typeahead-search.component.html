@@ -37,8 +37,9 @@
     <mat-list-item
       *ngFor="let result of searchResults"
       (click)="onResultClick(result)"
-    >
-      {{ result.title }}
+      ><span class="result-title">
+        {{ result.title | wrapWithUnderscope }}
+      </span>
     </mat-list-item>
   </mat-list>
 </div>
