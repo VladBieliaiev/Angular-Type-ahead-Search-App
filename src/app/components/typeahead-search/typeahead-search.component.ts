@@ -1,10 +1,6 @@
 import { NgFor, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MatSelectModule } from '@angular/material/select';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatListModule } from '@angular/material/list';
 import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { Category, SearchResult } from 'src/app/interfaces/interfaces';
 import { CategoryService } from 'src/app/services/category.service';
@@ -16,22 +12,14 @@ import { WrapWithUnderscopePipe } from 'src/app/features/wrap-with-underscope.pi
   templateUrl: './typeahead-search.component.html',
   styleUrls: ['./typeahead-search.component.css'],
   standalone: true,
-  imports: [
-    NgFor,
-    NgIf,
-    FormsModule,
-    MatSelectModule,
-    MatInputModule,
-    MatButtonModule,
-    MatListModule,
-    WrapWithUnderscopePipe,
-  ],
+  imports: [NgFor, NgIf, FormsModule, WrapWithUnderscopePipe],
 })
 export class TypeaheadSearchComponent {
   categories: Category[] = [];
   searchResults: SearchResult[] = [];
   searchQuery: string = '';
   selectedCategoryId: string = '';
+  selectedCategoryName: string = '';
   searchSubject = new Subject<string>();
 
   constructor(
@@ -68,13 +56,17 @@ export class TypeaheadSearchComponent {
   }
 
   loadCategories(): void {
-    this.categoryService.getCategories().subscribe(
-      (data) => {
+    this.categoryService.getCategories().subscribe({
+      next: (data) => {
         this.categories = data.trivia_categories;
-        console.log(data.trivia_categories);
+
+        const storedCategoryId = localStorage.getItem('selectedCategoryId');
+        if (storedCategoryId) {
+          this.selectedCategoryId = storedCategoryId;
+        }
       },
-      (error) => console.error('Error:', error),
-    );
+      error: (error) => console.error('Error loading categories:', error),
+    });
   }
 
   onSearchInputChanged(event: Event): void {
@@ -82,31 +74,36 @@ export class TypeaheadSearchComponent {
     this.searchSubject.next(inputValue);
   }
 
+  onCategoryChange(): void {
+    this.performSearch(this.searchQuery);
+  }
+
   performSearch(searchTerm: string): void {
+    const selectedCategory = this.categories.find(
+      (category) => category.id === Number(this.selectedCategoryId),
+    );
+
+    this.selectedCategoryName = selectedCategory ? selectedCategory.name : '';
+
     localStorage.setItem('searchTerm', searchTerm);
     localStorage.setItem('selectedCategoryId', this.selectedCategoryId);
-
-    const selectedCategory = this.categories.find(
-      (category) => category.id.toString() === this.selectedCategoryId,
-    );
-    const selectedCategoryName = selectedCategory ? selectedCategory.name : '';
+    localStorage.setItem('selectedCategoryName', this.selectedCategoryName);
 
     this.searchService
-      .searchArticles(searchTerm, selectedCategoryName)
-      .subscribe(
-        (data) => {
+      .searchArticles(searchTerm, this.selectedCategoryName)
+      .subscribe({
+        next: (data) => {
           if (data.query.search.length === 0) {
             this.searchResults = [];
             alert('No results found for the given search term and category.');
           } else {
             this.searchResults = data.query.search;
-            console.log(this.searchResults);
           }
         },
-        (error) => {
+        error: (error) => {
           console.error('Error:', error);
           alert('An error occurred while searching for articles.');
         },
-      );
+      });
   }
 }
